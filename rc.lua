@@ -6,10 +6,10 @@ pcall(require, "luarocks.loader")
 local revelation = require( "revelation" )
 
 -- battery widget
-local battery_widgets = require( "battery-widget" )
+local battery_widgets = require( "widgets/battery-widget" )
 
 -- net widget
-local net_widgets = require( "net_widgets" )
+local net_widgets = require( "widgets/wireless" )
 
 
 -- Standard awesome library
@@ -149,7 +149,7 @@ battery = battery_widgets {
 --}}}
 
 -- {{{ Net widgets
-net_wireless = net_widgets.wireless( {
+net_wireless = net_widgets( {
     interface="wlp3s0",
     font = "Inconsolata for Powerline 11",
     show_icon = false,
