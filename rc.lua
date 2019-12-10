@@ -2,9 +2,6 @@
 -- found (e.g. lgi). If LuaRocks is not installed, do nothing.
 pcall(require, "luarocks.loader")
 
--- The revelation library
-local revelation = require( "revelation" )
-
 -- battery widget
 local battery_widget = require( "widgets/battery-widget" ) { --{{{
     ac_prefix = {
@@ -226,9 +223,6 @@ awful.screen.connect_for_each_screen(function(s)
         screen  = s,
         filter  = awful.widget.taglist.filter.noempty,
         buttons = taglist_buttons,
-        style = {
-            spacing = 5,
-        }
     }
 
     -- set tasklist items to a set max width

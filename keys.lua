@@ -1,6 +1,7 @@
 local awful = require("awful")
 local gears = require("gears")
 local menubar = require("menubar")
+local revelation = require("revelation")
 local hotkeys_popup = require( "awful.hotkeys_popup" )
 
 menubar.utils.terminal = "st"
