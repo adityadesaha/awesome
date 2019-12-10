@@ -36,20 +36,9 @@ local function worker(args)
         if signal_level == nil then
             connected = false
             net_text:set_text( " " )
-            --net_icon:set_image(ICON_DIR.."wireless_na.png")
         else
             connected = true
             net_text:set_text( " " )
-            -- net_text:set_text(string.format("%"..indent.."d%%", signal_level))
-            -- if signal_level < 25 then
-            --     net_icon:set_image(ICON_DIR.."wireless_0.png")
-            -- elseif signal_level < 50 then
-            --     net_icon:set_image(ICON_DIR.."wireless_1.png")
-            -- elseif signal_level < 75 then
-            --     net_icon:set_image(ICON_DIR.."wireless_2.png")
-            -- else
-            --     net_icon:set_image(ICON_DIR.."wireless_3.png")
-            -- end
         end
     end
 
