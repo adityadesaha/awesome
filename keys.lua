@@ -3,6 +3,7 @@ local gears = require("gears")
 local menubar = require("menubar")
 local revelation = require("revelation")
 local hotkeys_popup = require( "awful.hotkeys_popup" )
+local beautiful = require( "beautiful" )
 
 menubar.utils.terminal = "st"
 
@@ -187,8 +188,8 @@ keys.globalkeys = gears.table.join(
     awful.key({ modkey }, "r", --{{{
         function ()
             awful.prompt.run {
-                prompt  = " cmd: ",
-                font = "Consolas for Powerline 10",
+                prompt = " $:",
+                font = beautiful.consolefont,
                 textbox = awful.screen.focused().mypromptbox.widget,
                 exe_callback = awful.spawn
             }
@@ -202,6 +203,22 @@ keys.globalkeys = gears.table.join(
             menubar.show() 
         end,
               { description = "show the menubar", group = "launcher"}
+    ),--}}}
+
+    -- hide wibar
+    awful.key({ modkey }, "Prior", --{{{
+        function()
+            awful.screen.focused().mywibox.visible = false
+        end,
+        { description = "lol", group = "lol" }
+    ), --}}}
+
+    -- show wibar
+    awful.key({ modkey }, "Next", --{{{
+        function()
+            awful.screen.focused().mywibox.visible = true
+        end,
+        { description = "lol", group = "lol" }
     ) --}}}
 )
 
@@ -309,6 +326,5 @@ keys.clientbuttons = gears.table.join( --{{{
 
 -- Set keys
 root.keys(keys.globalkeys)
-
 
 return keys

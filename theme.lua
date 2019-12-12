@@ -13,6 +13,8 @@ local themes_path = gfs.get_themes_dir()
 local theme = {}
 
 theme.font          = "Noto Sans 11"
+theme.consolefont   = "Inconsolata for Powerline 11"
+theme.symbolfont    = "Font Awesome 5 Free 12"
 
 -- {{{ Colors
 theme.bg_normal     = xrdb.background   or "#222222"
@@ -66,8 +68,8 @@ palette.base0F  = "#EC5F67"
 
     theme.fg_normal     = palette.base06
     theme.fg_focus      = palette.base06
-    theme.fg_urgent     = palette.base06
-    theme.fg_minimize   = palette.base04
+    theme.fg_urgent     = palette.base00
+    theme.fg_minimize   = palette.base03
 
     theme.border_normal = palette.base03
     theme.border_focus  = palette.base04
