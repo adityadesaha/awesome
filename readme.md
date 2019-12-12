@@ -6,5 +6,4 @@ programmer nor do I know lua, so possibly someday might
 never come.
 
 ## TODO:
-* refactor the wibar part of rc.lua
 * taglist looks horrible, make it look better.
