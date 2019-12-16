@@ -10,3 +10,5 @@ never come.
 * add a proper shell widget
 * make it so that the bar shows minimized windows in tiled/floating
   mode, but shows all active windows in max mode
+* Persistent resizing
+* Rounded corners for floating windows
