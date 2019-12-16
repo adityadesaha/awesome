@@ -21,6 +21,7 @@ require("awful.hotkeys_popup.keys")
 local revelation = require( "revelation" )
 
 
+
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
 -- another config (This code will only ever execute for the fallback config)
@@ -56,7 +57,7 @@ revelation.init()
 beautiful.init("/home/aditya/.config/awesome/theme.lua")
 
 -- This is used later as the default terminal and editor to run.
-terminal = "st"
+terminal = "xterm"
 editor = os.getenv("EDITOR") or "nano"
 editor_cmd = terminal .. " -e " .. editor
 
@@ -124,6 +125,7 @@ root.buttons(gears.table.join(
 
 --keybindings
 local keys = require( "keys" )
+root.mode = 'default'
 root.keys( keys.globalkeys )
 
 -- {{{ Rules

@@ -35,10 +35,10 @@ local function worker(args)
         end)
         if signal_level == nil then
             connected = false
-            net_text:set_text( " " )
+            net_text:set_text( "" )
         else
             connected = true
-            net_text:set_text( " " )
+            net_text:set_text( "" )
         end
     end
 

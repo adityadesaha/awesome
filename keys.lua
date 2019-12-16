@@ -5,7 +5,7 @@ local revelation = require("revelation")
 local hotkeys_popup = require( "awful.hotkeys_popup" )
 local beautiful = require( "beautiful" )
 
-menubar.utils.terminal = "st"
+menubar.utils.terminal = "xterm"
 
 local keys = {}
 
@@ -208,7 +208,7 @@ keys.globalkeys = gears.table.join(
     -- hide wibar
     awful.key({ modkey }, "Prior", --{{{
         function()
-            awful.screen.focused().mywibox.visible = false
+            awful.screen.focused().topbar.visible = not awful.screen.focused().topbar.visible
         end,
         { description = "lol", group = "lol" }
     ), --}}}
@@ -216,7 +216,16 @@ keys.globalkeys = gears.table.join(
     -- show wibar
     awful.key({ modkey }, "Next", --{{{
         function()
-            awful.screen.focused().mywibox.visible = true
+            awful.screen.focused().sidebar.visible = not awful.screen.focused().sidebar.visible
+        end,
+        { description = "lol", group = "lol" }
+    ), --}}}
+
+    -- go to resize mode
+    awful.key({ modkey, "Shift" }, "b", --{{{
+        function()
+            root.keys(keys.globalkeys2)
+            root.mode = 'mod'
         end,
         { description = "lol", group = "lol" }
     ) --}}}
@@ -324,7 +333,20 @@ keys.clientbuttons = gears.table.join( --{{{
     end)
 ) --}}}
 
--- Set keys
-root.keys(keys.globalkeys)
+-- The new RESIZE Mode:
+keys.globalkeys2 = gears.table.join(
+    awful.key({}, "j",
+        function()
+            local c = client.focus
+            c:relative_move( 20, 20, -40, -40 )
+        end,
+        { description =  "lol", group = "lol" } ),
+    awful.key({}, "Escape", --{{{
+        function()
+            root.mode = 'default'
+            root.keys(keys.globalkeys)
+        end,
+        { description = "lol", group = "lol" } )
+)
 
 return keys

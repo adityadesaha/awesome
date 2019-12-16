@@ -3,6 +3,7 @@
 ---------------------------
 
 local theme_assets = require("beautiful.theme_assets")
+local gears = require( "gears" )
 local xresources = require("beautiful.xresources")
 local xrdb = xresources.get_current_theme()
 local dpi = xresources.apply_dpi
@@ -68,8 +69,8 @@ palette.base0F  = "#EC5F67"
 
     theme.fg_normal     = palette.base06
     theme.fg_focus      = palette.base06
-    theme.fg_urgent     = palette.base00
-    theme.fg_minimize   = palette.base03
+    theme.fg_urgent     = palette.base06
+    theme.fg_minimize   = palette.base04
 
     theme.border_normal = palette.base03
     theme.border_focus  = palette.base04
@@ -99,13 +100,18 @@ palette.base0F  = "#EC5F67"
 --theme.taglist_bg_focus = "#ff0000"
 
 -- Generate taglist squares:
-local taglist_square_size = dpi(4)
-theme.taglist_squares_sel = theme_assets.taglist_squares_sel(
-    taglist_square_size, theme.fg_normal
-)
-theme.taglist_squares_unsel = theme_assets.taglist_squares_unsel(
-    taglist_square_size, theme.fg_normal
-)
+-- local taglist_square_size = dpi(4)
+-- theme.taglist_squares_sel = theme_assets.taglist_squares_sel(
+--     taglist_square_size, theme.fg_normal
+-- )
+-- theme.taglist_squares_unsel = theme_assets.taglist_squares_unsel(
+--     taglist_square_size, theme.fg_normal
+-- )
+
+-- Generate the taglist
+theme.taglist_spacing = 5
+--theme.taglist_font = "Font Awesome 5 Free 13"
+-- theme.taglist_font = "Avenger 13"
 
 -- Variables set for theming notifications:
 -- notification_font
