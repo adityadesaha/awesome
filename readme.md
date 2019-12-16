@@ -6,4 +6,5 @@ programmer nor do I know lua, so possibly someday might
 never come.
 
 ## TODO:
-* taglist looks horrible, make it look better.
+* make a clock widget for the vertical bar
+* add a proper shell widget
