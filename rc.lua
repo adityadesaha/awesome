@@ -20,6 +20,7 @@ local common = require( "awful.widget.common" )
 require("awful.hotkeys_popup.keys")
 local revelation = require( "revelation" )
 
+terminal_icon = gears.surface("/home/aditya/Downloads/terminal.png")._native
 
 
 -- {{{ Error handling
@@ -57,7 +58,7 @@ revelation.init()
 beautiful.init("/home/aditya/.config/awesome/theme.lua")
 
 -- This is used later as the default terminal and editor to run.
-terminal = "xterm"
+terminal = "st"
 editor = os.getenv("EDITOR") or "nano"
 editor_cmd = terminal .. " -e " .. editor
 
@@ -184,6 +185,14 @@ awful.rules.rules = {
     -- Add titlebars to normal clients and dialogs
     { rule_any = {type = { "normal", "dialog" }
       }, properties = { titlebars_enabled = false }
+    },
+
+    {
+        rule = { class = "st" },
+        callback = function(c)
+            c.icon = terminal_icon
+            icon:finish()
+        end,
     },
 
     -- Set Firefox to always map on the tag named "2" on screen 1.

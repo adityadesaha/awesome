@@ -6,7 +6,7 @@ local hotkeys_popup = require( "awful.hotkeys_popup" )
 local beautiful = require( "beautiful" )
 local wibox = require( "wibox" )
 
-menubar.utils.terminal = "xterm"
+menubar.utils.terminal = "st"
 
 local keys = {}
 

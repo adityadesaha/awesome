@@ -151,27 +151,12 @@ end --}}}
                 layout = wibox.layout.fixed.vertical(),
                 widget_template = {
                     {
-                        {
-                            {
-                                {
-                                    id = 'icon_role',
-                                    widget = wibox.widget.imagebox,
-                                },
-                                top = 14,
-                                left = 0,
-                                right = 0,
-                                widget = wibox.container.margin,
-                            },
-                            shape = gears.shape.rounded_rect,
-                            bg = beautiful.bg_normal,
-                            widget = wibox.container.background,
-                        },
-                        margins = 2,
-                        widget = wibox.container.margin,
+                        id = 'icon_role',
+                        widget = wibox.widget.imagebox,
                     },
                     id = 'background_role',
                     widget = wibox.container.background,
-                    forced_height = 49,
+                    forced_height = 30,
                 }
             }
     end --}}}

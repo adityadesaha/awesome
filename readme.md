@@ -6,5 +6,7 @@ programmer nor do I know lua, so possibly someday might
 never come.
 
 ## TODO:
-* make it so that the bar shows minimized windows in tiled/floating
-  mode, but shows all active windows in max mode
+* make another widget on the sidebar for minimized windows from
+  all workspaces
+* make a file launcher, preferably like fzf
+* make a scratchpad
