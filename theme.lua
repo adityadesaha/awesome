@@ -14,7 +14,7 @@ local themes_path = gfs.get_themes_dir()
 local theme = {}
 
 theme.font          = "Noto Sans 11"
-theme.consolefont   = "Inconsolata for Powerline 11"
+theme.consolefont   = "Inconsolata for Powerline 13"
 theme.symbolfont    = "Font Awesome 5 Free 12"
 
 -- {{{ Colors
@@ -83,7 +83,10 @@ palette.base0F  = "#EC5F67"
     theme.widget_black = palette.base00
     theme.widget_transparent = theme.widget_black
 
+    theme.tasklist_bg_normal = palette.base02
+    theme.tasklist_bg_focus = palette.base03
 -- %%base16_template_end%%
+theme.bg_urgent = "#8d393d"
 -- }}}
 
 -- There are other variable sets
@@ -109,7 +112,8 @@ palette.base0F  = "#EC5F67"
 -- )
 
 -- Generate the taglist
-theme.taglist_spacing = 5
+theme.taglist_spacing = -1
+theme.taglist_font = "Open Sans 12"
 --theme.taglist_font = "Font Awesome 5 Free 13"
 -- theme.taglist_font = "Avenger 13"
 

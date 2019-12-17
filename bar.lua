@@ -8,7 +8,7 @@ local keys = require( "keys" )
 
 --{{{ misc functions
 
-local function set_wallpaper(s)
+local function set_wallpaper(s) --{{{
     -- Wallpaper
     if beautiful.wallpaper then
         local wallpaper = beautiful.wallpaper
@@ -18,33 +18,67 @@ local function set_wallpaper(s)
         end
         gears.wallpaper.maximized(wallpaper, s, true)
     end
-end
-
--- utility function for fixed width tasklist
-local function list_update( w, buttons, label, data, objects )
+end --}}}
+local function list_update( w, buttons, label, data, objects ) --{{{
     common.list_update( w, buttons, label, data, objects )
     w:set_max_widget_size( 250 )
-end
+end --}}}
+local function capture( cmd ) --{{{
+    local f = assert( io.popen( cmd, 'r' ) )
+    local s = assert( f:read( '*a' ) )
+    f:close()
+    return s
+end --}}}
 
 --}}}
 
 --{{{ widgets
     local mytextclock = wibox.widget.textclock( "%l:%M%P ")
+    local vclock = wibox.widget { --{{{
+        {
+            text = capture( 'date +%_I' ):sub(1,2), -- ugly I know
+            font = 'Open Sans Bold 12',
+            align = 'right',
+            widget = wibox.widget.textbox
+        },
+        {
+            text = capture( 'date +%M' ):sub(1,2), -- ugly I know
+            font = 'Open Sans 9',
+            align = 'right',
+            widget = wibox.widget.textbox
+        },
+        {
+            text = capture( 'date +%P' ):sub(1,2),
+            font = 'Open Sans 7',
+            align = 'right',
+            widget = wibox.widget.textbox
+        },
+        layout = wibox.layout.fixed.vertical,
+        spacing = -5,
+    } --}}}
     local battery_widget = require( "widgets/battery-widget" ) { --{{{
         ac_prefix = {
-            { 25, "  " },
-            { 50, "  " },
-            { 75, "  " },
-            { 95, "  " },
-            {100, "  " }
+            { 25, "" },
+            { 50, "" },
+            { 75, "" },
+            { 95, "" },
+            {100, "" }
         },
         battery_prefix = {
-            { 25, " " },
-            { 50, " " },
-            { 75, " " },
-            { 95, " " },
-            {100, " " }
+            { 25, "" },
+            { 50, "" },
+            { 75, "" },
+            { 95, "" },
+            {100, "" }
         },
+        listen = true,
+        widget_font = "Font Awesome 5 Free 12",
+        widget_text = "${AC_BAT}",
+        tooltip_text = "Battery ${state}: ${percent}%; est${time_est}"
+    } --}}}
+    local ac_widget = require( "widgets/battery-widget" ) { --{{{
+        ac_prefix = "",
+        battery_prefix = '',
         listen = true,
         widget_font = "Font Awesome 5 Free 12",
         widget_text = "${AC_BAT}",
@@ -52,7 +86,7 @@ end
     } --}}}
     local net_widget = require( "widgets/wireless" ) { --{{{
         interface="wlp3s0",
-        font = "Inconsolata for Powerline 13",
+        font = "Font Awesome 5 Free 12",
         show_icon = false,
     } --}}}
     local promptbox = awful.widget.prompt { --{{{
@@ -79,14 +113,13 @@ end
                 {
                     {
                         id = 'text_role',
+                        align = 'center',
                         widget = wibox.widget.textbox,
                     },
-                    left = 8,
-                    top = 2,
+                    top = -2,
                     widget = wibox.container.margin,
                 },
                 id = 'background_role',
-                shape = gears.shape.circle,
                 forced_height = 24,
                 forced_width = 24,
                 widget = wibox.container.background,
@@ -109,22 +142,36 @@ end
     local function vtasklist(s) --{{{
         return awful.widget.tasklist {
                 screen = s,
-                filter = awful.widget.tasklist.filter.minimizedcurrenttags,
+                filter = awful.widget.tasklist.filter.currenttags,
                 button = tasklist_buttons,
+                style = {
+                    shape = gears.shape.rounded_rect,
+                    spacing = 5,
+                },
                 layout = wibox.layout.fixed.vertical(),
                 widget_template = {
                     {
                         {
-                            id = 'icon_role',
-                            widget = wibox.widget.imagebox,
+                            {
+                                {
+                                    id = 'icon_role',
+                                    widget = wibox.widget.imagebox,
+                                },
+                                top = 14,
+                                left = 0,
+                                right = 0,
+                                widget = wibox.container.margin,
+                            },
+                            shape = gears.shape.rounded_rect,
+                            bg = beautiful.bg_normal,
+                            widget = wibox.container.background,
                         },
-                        left = 2,
-                        top = 9,
+                        margins = 2,
                         widget = wibox.container.margin,
                     },
                     id = 'background_role',
                     widget = wibox.container.background,
-                    forced_height = 40,
+                    forced_height = 49,
                 }
             }
     end --}}}
@@ -170,7 +217,6 @@ awful.screen.connect_for_each_screen(function(s) --{{{
 
     -- Each screen has its own tag table.
     awful.tag({ "1", "2", "3", "4", "5", "6", "7", "8", "9" }, s, awful.layout.layouts[1])
-    -- awful.tag({"a", "b", "c", "d", "e", "f" }, s, awful.layout.layouts[1])
 
     -- Create a promptbox for each screen
     s.mypromptbox = promptbox
@@ -180,14 +226,9 @@ awful.screen.connect_for_each_screen(function(s) --{{{
     s.mylayoutbox = awful.widget.layoutbox(s)
     s.mylayoutbox:buttons( layoutbox_buttons )
 
-    -- Create a taglist widget
     s.mytaglist = taglist(s)
-
-    s.myvtaglist = vtaglist(s)
-    s.myvtasklist = vtasklist(s)
-
-    -- Create a tasklist widget
-    s.mytasklist = awful.widget.tasklist {
+    s.mytasklist = tasklist(s)
+    --[[s.mytasklist = awful.widget.tasklist { --{{{
         screen = s,
         filter = awful.widget.tasklist.filter.currenttags,
         buttons = tasklist_buttons,
@@ -200,7 +241,10 @@ awful.screen.connect_for_each_screen(function(s) --{{{
             id = 'background_role',
             widget = wibox.container.background,
         }
-    }
+    } --}}}--]]
+
+    s.myvtaglist = vtaglist(s)
+    s.myvtasklist = vtasklist(s)
 
     -- Create the top bar   --{{{
     s.topbar = awful.wibar({
@@ -221,20 +265,29 @@ awful.screen.connect_for_each_screen(function(s) --{{{
 
     -- Activate the side bar --{{{
     s.sidebar:setup {
-        layout = wibox.layout.align.vertical,
         {
-            layout = wibox.layout.fixed.vertical,
-            s.myvtaglist,
+            {
+                layout = wibox.layout.fixed.vertical,
+                spacing = 20,
+                s.myvtaglist,
+                s.myvtasklist,
+            },
+            {
+                layout = wibox.layout.fixed.vertical,
+            },
+            {
+                layout = wibox.layout.fixed.vertical,
+                spacing = 5,
+                vclock,
+                net_widget,
+                battery_widget,
+                s.mylayoutbox,
+            },
+            layout = wibox.layout.align.vertical,
         },
-        {
-            layout = wibox.layout.fixed.vertical,
-            s.myvtasklist,
-        },
-        {
-            layout = wibox.layout.fixed.vertical,
-            net_widget,
-            s.mylayoutbox,
-        },
+        left = 2,
+        right = 2,
+        widget = wibox.container.margin,
     }
     -- }}}
 
@@ -258,4 +311,3 @@ end) --}}}
 
 -- Re-set wallpaper when a screen's geometry changes (e.g. different resolution)
 screen.connect_signal("property::geometry", set_wallpaper)
-

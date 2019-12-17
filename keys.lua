@@ -4,6 +4,7 @@ local menubar = require("menubar")
 local revelation = require("revelation")
 local hotkeys_popup = require( "awful.hotkeys_popup" )
 local beautiful = require( "beautiful" )
+local wibox = require( "wibox" )
 
 menubar.utils.terminal = "xterm"
 
@@ -12,8 +13,43 @@ local keys = {}
 -- keys
 super_key = "Mod4"
 
+mode_popup = awful.popup { --{{{
+    widget = {
+        {
+            text = 'resize mode',
+            align = 'center',
+            widget = wibox.widget.textbox,
+            forced_height = 30,
+            forced_width = 100,
+        },
+        bg = beautiful.bg_urgent,
+        widget = wibox.widget.background,
+    },
+    shape = gears.shape.rounded_rect,
+    visible = false,
+    ontop   = true,
+    placement = awful.placement.top,
+} --}}}
+
+run_popup = awful.popup { --{{{
+    widget = {
+        {
+            id = 'textbox',
+            widget = wibox.widget.textbox,
+            font = beautiful.consolefont,
+            forced_height = 30,
+        },
+        bg = beautiful.bg_urgent,
+        widget = wibox.widget.background,
+    },
+    shape = gears.shape.rounded_rect,
+    visible = false,
+    ontop = true,
+    placement = awful.placement.top,
+} --}}}
+
 keys.globalkeys = gears.table.join(
-    awful.key({ modkey, "Shift" }, "s",       --{{{
+    awful.key({ modkey, "Shift" }, "s", --{{{
         hotkeys_popup.show_help,
         { description="show help", group="awesome"}
     ), --}}}
@@ -172,8 +208,13 @@ keys.globalkeys = gears.table.join(
 
     -- Changing layouts
     awful.key({ modkey }, "space",  --{{{
-        function () 
-            awful.layout.inc( 1)
+        function ()
+            awful.layout.inc(1)
+            for s in screen do
+                if (awful.layout.get(s) == awful.layout.suit.max) then
+                    awful.screen.focused().myvtasklist.filter = awful.widget.tasklist.filter.currenttags
+                end
+            end
         end,
         { description = "select next", group = "layout"}
     ), --}}}
@@ -187,11 +228,15 @@ keys.globalkeys = gears.table.join(
     -- Prompt
     awful.key({ modkey }, "r", --{{{
         function ()
+            run_popup.visible = true
             awful.prompt.run {
-                prompt = " $:",
+                prompt = " $: ",
                 font = beautiful.consolefont,
-                textbox = awful.screen.focused().mypromptbox.widget,
-                exe_callback = awful.spawn
+                exe_callback = function(s)
+                    awful.spawn(s)
+                    run_popup.visible = false
+                end,
+                textbox = run_popup.widget:get_children_by_id( "textbox" )[1],
             }
         end,
         { description = "run prompt", group = "launcher"}
@@ -225,6 +270,7 @@ keys.globalkeys = gears.table.join(
     awful.key({ modkey, "Shift" }, "b", --{{{
         function()
             root.keys(keys.globalkeys2)
+            mode_popup.visible = true
             root.mode = 'mod'
         end,
         { description = "lol", group = "lol" }
@@ -233,7 +279,20 @@ keys.globalkeys = gears.table.join(
 
 keys.clientkeys = gears.table.join(
     awful.key({ modkey }, "s",       --{{{
-        awful.client.floating.toggle,
+        function(c)
+            c.floating = not c.floating
+            if c.floating then
+                --c:relative_move( 100, 100, -100, -100 )
+                if c.resized then
+                else
+                    c.width = 800
+                    c.height = 600
+                    c.x = 400
+                    c.y = 100
+                    c.resized = true
+                end
+            end
+        end,
         { description="show help", group="awesome"}
     ), --}}}
     awful.key({ modkey }, "f", --{{{
@@ -294,8 +353,7 @@ for i = 1, 9 do
                   end,
                   { description = "toggle tag #" .. i, group = "tag"}
         ), --}}}
-        awful.key({ modkey, "Shift" }, "#" .. i + 9, --{{{
-                  function ()
+        awful.key({ modkey, "Shift" }, "#" .. i + 9, function () --{{{ 
                       if client.focus then
                           local tag = client.focus.screen.tags[i]
                           if tag then
@@ -334,19 +392,69 @@ keys.clientbuttons = gears.table.join( --{{{
 ) --}}}
 
 -- The new RESIZE Mode:
-keys.globalkeys2 = gears.table.join(
-    awful.key({}, "j",
+keys.globalkeys2 = gears.table.join( --{{{
+    awful.key({}, "h", --{{{
         function()
             local c = client.focus
-            c:relative_move( 20, 20, -40, -40 )
+            if c.floating then
+                c:relative_move( 20, 0, -40, 0 )
+            --elseif c == awful.client.getmaster() then
+            --    awful.tag.incmwfact(0.05)
+            else
+                awful.tag.incmwfact(0.05)
+                -- awful.client.incwfact(-0.05)
+            end
         end,
-        { description =  "lol", group = "lol" } ),
+        { description =  "lol", group = "lol" } 
+    ), --}}}
+    awful.key({}, "j", --{{{
+        function()
+            local c = client.focus
+            if c.floating then
+                c:relative_move( 0, 20, 0, -40 )
+            elseif c == awful.client.getmaster() then
+                --awful.tag.incmwfact(-0.05)
+            else
+                awful.client.incwfact(-0.05)
+            end
+        end,
+        { description =  "lol", group = "lol" } 
+    ), --}}}
+    awful.key({}, "k", --{{{
+        function()
+            local c = client.focus
+            if c.floating then
+                c:relative_move( 0, -20, 0, 40 )
+            elseif c == awful.client.getmaster() then
+                --awful.tag.incmwfact(-0.05)
+            else
+                awful.client.incwfact(0.05)
+            end
+        end,
+        { description =  "lol", group = "lol" } 
+    ), --}}}
+    awful.key({}, "l", --{{{
+        function()
+            local c = client.focus
+            if c.floating then
+                c:relative_move( -20, 0, 40, 0 )
+            --elseif c == awful.client.getmaster() then
+            --    awful.tag.incmwfact(-0.05)
+            else
+                awful.tag.incmwfact(-0.05)
+                --awful.client.incwfact(-0.05)
+            end
+        end,
+        { description =  "lol", group = "lol" } 
+    ), --}}}
     awful.key({}, "Escape", --{{{
         function()
             root.mode = 'default'
             root.keys(keys.globalkeys)
+            mode_popup.visible = false
         end,
-        { description = "lol", group = "lol" } )
-)
+        { description = "lol", group = "lol" } 
+    ) --}}}
+) --}}}
 
 return keys

@@ -70,7 +70,7 @@ modkey = "Mod4"
 
 -- Table of layouts to cover with awful.layout.inc, order matters.
 awful.layout.layouts = {
-    awful.layout.suit.tile,
+    awful.layout.suit.tile.left,
     awful.layout.suit.tile.top,
     awful.layout.suit.max,
     -- awful.layout.suit.floating,
@@ -194,6 +194,7 @@ awful.rules.rules = {
 
 -- {{{ Signals
 -- Signal function to execute when a new client appears.
+awesome.register_xproperty( "FLOATING", "boolean" )
 client.connect_signal("manage", function (c)
     -- Set the windows at the slave,
     -- i.e. put it at the end of others instead of setting it master.
@@ -205,9 +206,24 @@ client.connect_signal("manage", function (c)
         -- Prevent clients from being unreachable after screen count changes.
         awful.placement.no_offscreen(c)
     end
+
 end)
 
 -- Add a titlebar if titlebars_enabled is set to true in the rules.
+
+-- rounded corners for floating windows
+client.connect_signal("property::floating", function(c)
+    c.shape = function( cr, w, h )
+        if c.floating then
+            gears.shape.rounded_rect( cr, w, h, 10 )
+            c:set_xproperty( 'FLOATING', true )
+        else
+            gears.shape.rectangle( cr, w, h )
+            c:set_xproperty( 'FLOATING', false )
+        end
+    end
+end)
+
 client.connect_signal("request::titlebars", function(c)
     -- buttons for the titlebar
     local buttons = gears.table.join(
