@@ -32,29 +32,62 @@ end --}}}
 
 --}}}
 
+-- {{{ buttons
+local taglist_buttons = gears.table.join(
+                    awful.button({ }, 1, function(t) t:view_only() end),
+                    awful.button({ }, 4, function(t) awful.tag.viewnext(t.screen) end),
+                    awful.button({ }, 5, function(t) awful.tag.viewprev(t.screen) end)
+                )
+
+local tasklist_buttons = gears.table.join(
+                     awful.button({ }, 1, function (c)
+                                              if c == client.focus then
+                                                  c.minimized = true
+                                              else
+                                                  c:emit_signal(
+                                                      "request::activate",
+                                                      "tasklist",
+                                                      {raise = true}
+                                                  )
+                                              end
+                                          end),
+                     awful.button({ }, 4, function ()
+                                              awful.client.focus.byidx(1)
+                                          end),
+                     awful.button({ }, 5, function ()
+                                              awful.client.focus.byidx(-1)
+                                          end))
+local layoutbox_buttons = gears.table.join(
+                           awful.button({ }, 1, function () awful.layout.inc( 1) end),
+                           awful.button({ }, 3, function () awful.layout.inc(-1) end),
+                           awful.button({ }, 4, function () awful.layout.inc( 1) end),
+                           awful.button({ }, 5, function () awful.layout.inc(-1) end))
+
+--}}}
+
 --{{{ widgets
     local mytextclock = wibox.widget.textclock( "%l:%M%P ")
     local vclock = wibox.widget { --{{{
         {
-            text = capture( 'date +%_I' ):sub(1,2), -- ugly I know
-            font = 'Open Sans Bold 12',
+            font = 'Open Sans Bold 13',
+            format = '%_I',
             align = 'right',
-            widget = wibox.widget.textbox
+            widget = wibox.widget.textclock,
         },
         {
-            text = capture( 'date +%M' ):sub(1,2), -- ugly I know
-            font = 'Open Sans 9',
+            font = 'Open Sans 12',
             align = 'right',
-            widget = wibox.widget.textbox
+            format = '%M',
+            widget = wibox.widget.textclock,
         },
         {
-            text = capture( 'date +%P' ):sub(1,2),
-            font = 'Open Sans 7',
+            font = 'Open Sans 10',
             align = 'right',
-            widget = wibox.widget.textbox
+            format = '%P',
+            widget = wibox.widget.textclock,
         },
         layout = wibox.layout.fixed.vertical,
-        spacing = -5,
+        spacing= -5,
     } --}}}
     local battery_widget = require( "widgets/battery-widget" ) { --{{{
         ac_prefix = {
@@ -143,7 +176,19 @@ end --}}}
         return awful.widget.tasklist {
                 screen = s,
                 filter = awful.widget.tasklist.filter.currenttags,
-                button = tasklist_buttons,
+                button = gears.table.join(
+                    awful.button({}, 1, function(c)
+                        if c==client.focus then
+                            c.minimized = true
+                        else
+                            c:emit_signal(
+                                "request::activate",
+                                "tasklist",
+                                { raise = true }
+                            )
+                        end
+                    end)
+                ),
                 style = {
                     shape = gears.shape.rounded_rect,
                     spacing = 5,
@@ -160,39 +205,6 @@ end --}}}
                 }
             }
     end --}}}
---}}}
-
--- {{{ buttons
-local taglist_buttons = gears.table.join(
-                    awful.button({ }, 1, function(t) t:view_only() end),
-                    awful.button({ }, 4, function(t) awful.tag.viewnext(t.screen) end),
-                    awful.button({ }, 5, function(t) awful.tag.viewprev(t.screen) end)
-                )
-
-local tasklist_buttons = gears.table.join(
-                     awful.button({ }, 1, function (c)
-                                              if c == client.focus then
-                                                  c.minimized = true
-                                              else
-                                                  c:emit_signal(
-                                                      "request::activate",
-                                                      "tasklist",
-                                                      {raise = true}
-                                                  )
-                                              end
-                                          end),
-                     awful.button({ }, 4, function ()
-                                              awful.client.focus.byidx(1)
-                                          end),
-                     awful.button({ }, 5, function ()
-                                              awful.client.focus.byidx(-1)
-                                          end))
-local layoutbox_buttons = gears.table.join(
-                           awful.button({ }, 1, function () awful.layout.inc( 1) end),
-                           awful.button({ }, 3, function () awful.layout.inc(-1) end),
-                           awful.button({ }, 4, function () awful.layout.inc( 1) end),
-                           awful.button({ }, 5, function () awful.layout.inc(-1) end))
-
 --}}}
 
 -- Create a wibox for each screen and add it

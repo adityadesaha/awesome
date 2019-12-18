@@ -5,6 +5,7 @@ local revelation = require("revelation")
 local hotkeys_popup = require( "awful.hotkeys_popup" )
 local beautiful = require( "beautiful" )
 local wibox = require( "wibox" )
+local naughty = require( "naughty" )
 
 menubar.utils.terminal = "st"
 
@@ -184,6 +185,29 @@ keys.globalkeys = gears.table.join(
         { description = "move right", group = "client" }
     ), --}}}
 
+
+    awful.key( { modkey }, "x", --{{{
+        function()
+            launcher_command = [[bash -c '
+                $FZF_DEFAULT_COMMAND | rofi -lines 100 \
+                                            -location 1 \
+                                            -dmenu -i
+            ']]
+            awful.spawn.easy_async(
+                launcher_command,
+                function(stdout, stderr, reason, exit_code)
+                    if (exit_code == 0) then
+                        naughty.notify { text = "success" }
+                        awful.spawn( {"xdg-open", stdout} )
+                    else
+                        naughty.notify { text = stderr }
+                    end
+                end
+            )
+        end,
+        { description = "lol", group = "lol" } 
+    ), --}}}
+
     -- Standard program
     awful.key({ modkey }, "Return", --{{{
         function () 
@@ -242,13 +266,34 @@ keys.globalkeys = gears.table.join(
         { description = "run prompt", group = "launcher"}
     ), --}}}
 
-    -- Menubar
+    -- launchers
     awful.key({ modkey }, "p",  --{{{
         function() 
             menubar.show() 
         end,
               { description = "show the menubar", group = "launcher"}
     ),--}}}
+    awful.key( { modkey, "Shift" }, "p", --{{{
+        function()
+            launcher_command = [[bash -c '
+                $FZF_DEFAULT_COMMAND | rofi -lines 100 \
+                                            -location 1 \
+                                            -dmenu -i
+            ']]
+            awful.spawn.easy_async(
+                launcher_command,
+                function(stdout, stderr, reason, exit_code)
+                    if (exit_code == 0) then
+                        naughty.notify { text = "success" }
+                        awful.spawn( {"xdg-open", stdout} )
+                    else
+                        naughty.notify { text = stderr }
+                    end
+                end
+            )
+        end,
+        { description = "lol", group = "lol" } 
+    ), --}}}
 
     -- hide wibar
     awful.key({ modkey }, "Prior", --{{{
