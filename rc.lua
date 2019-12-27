@@ -20,7 +20,8 @@ local common = require( "awful.widget.common" )
 require("awful.hotkeys_popup.keys")
 local revelation = require( "revelation" )
 
-terminal_icon = gears.surface("/home/aditya/Downloads/terminal.png")._native
+_terminal_icon = gears.surface("/home/aditya/Downloads/terminal.png")
+terminal_icon = _terminal_icon._native
 
 
 -- {{{ Error handling
@@ -187,14 +188,6 @@ awful.rules.rules = {
       }, properties = { titlebars_enabled = false }
     },
 
-    {
-        rule = { class = "st" },
-        callback = function(c)
-            c.icon = terminal_icon
-            icon:finish()
-        end,
-    },
-
     -- Set Firefox to always map on the tag named "2" on screen 1.
     -- { rule = { class = "Firefox" },
     --   properties = { screen = 1, tag = "2" } },
@@ -208,6 +201,10 @@ client.connect_signal("manage", function (c)
     -- Set the windows at the slave,
     -- i.e. put it at the end of others instead of setting it master.
     -- if not awesome.startup then awful.client.setslave(c) end
+
+    if c.icon == nil then
+        c.icon = terminal_icon
+    end
 
     if awesome.startup
       and not c.size_hints.user_position

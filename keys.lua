@@ -185,29 +185,6 @@ keys.globalkeys = gears.table.join(
         { description = "move right", group = "client" }
     ), --}}}
 
-
-    awful.key( { modkey }, "x", --{{{
-        function()
-            launcher_command = [[bash -c '
-                $FZF_DEFAULT_COMMAND | rofi -lines 100 \
-                                            -location 1 \
-                                            -dmenu -i
-            ']]
-            awful.spawn.easy_async(
-                launcher_command,
-                function(stdout, stderr, reason, exit_code)
-                    if (exit_code == 0) then
-                        naughty.notify { text = "success" }
-                        awful.spawn( {"xdg-open", stdout} )
-                    else
-                        naughty.notify { text = stderr }
-                    end
-                end
-            )
-        end,
-        { description = "lol", group = "lol" } 
-    ), --}}}
-
     -- Standard program
     awful.key({ modkey }, "Return", --{{{
         function () 
@@ -277,14 +254,14 @@ keys.globalkeys = gears.table.join(
         function()
             launcher_command = [[bash -c '
                 $FZF_DEFAULT_COMMAND | rofi -lines 100 \
-                                            -location 1 \
+                                            -location 3 \
+                                            -width 30 \
                                             -dmenu -i
             ']]
             awful.spawn.easy_async(
                 launcher_command,
                 function(stdout, stderr, reason, exit_code)
                     if (exit_code == 0) then
-                        naughty.notify { text = "success" }
                         awful.spawn( {"xdg-open", stdout} )
                     else
                         naughty.notify { text = stderr }

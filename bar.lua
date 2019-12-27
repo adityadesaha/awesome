@@ -254,7 +254,7 @@ awful.screen.connect_for_each_screen(function(s) --{{{
 
     -- Create the side bar {{{
     s.sidebar = awful.wibar ( {
-        ontop = true,
+        ontop = false,
         position = "right",
         screen=s,
         width = 24,

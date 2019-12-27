@@ -8,5 +8,4 @@ never come.
 ## TODO:
 * make another widget on the sidebar for minimized windows from
   all workspaces
-* make a file launcher, preferably like fzf
 * make a scratchpad
