@@ -20,9 +20,8 @@ local common = require( "awful.widget.common" )
 require("awful.hotkeys_popup.keys")
 local revelation = require( "revelation" )
 
-_terminal_icon = gears.surface("/home/aditya/Downloads/terminal.png")
+_terminal_icon = gears.surface("/home/aditya/.config/awesome/icons/terminal.png")
 terminal_icon = _terminal_icon._native
-
 
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
@@ -221,7 +220,9 @@ end)
 client.connect_signal("property::floating", function(c)
     c.shape = function( cr, w, h )
         if c.floating then
-            gears.shape.rounded_rect( cr, w, h, 10 )
+            -- Important to keep the radius less than the actual radius, cos the actual radius
+            -- will be set by compton
+            gears.shape.rounded_rect( cr, w, h, 0 )
             c:set_xproperty( 'FLOATING', true )
         else
             gears.shape.rectangle( cr, w, h )

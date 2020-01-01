@@ -140,7 +140,9 @@ local layoutbox_buttons = gears.table.join(
             buttons = taglist_buttons,
             layout = wibox.layout.fixed.vertical,
             style = {
-                shape = gears.shape.circle,
+                shape = function( cr, w, h )
+                    gears.shape.rounded_rect( cr, w, h, 5 )
+                end,
             },
             widget_template = {
                 {
@@ -154,7 +156,7 @@ local layoutbox_buttons = gears.table.join(
                 },
                 id = 'background_role',
                 forced_height = 24,
-                forced_width = 24,
+                forced_width = 23,
                 widget = wibox.container.background,
             }
         }
